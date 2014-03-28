@@ -1,4 +1,4 @@
-package caelrin.GlassGesturesInMotion.sensor;
+package caelrin.GlassCopter.sensor;
 
 import java.text.DecimalFormat;
 

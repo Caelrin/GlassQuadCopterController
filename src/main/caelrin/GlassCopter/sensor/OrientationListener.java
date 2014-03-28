@@ -1,4 +1,4 @@
-package caelrin.GlassGesturesInMotion.sensor;
+package caelrin.GlassCopter.sensor;
 
 /**
  * Created by Caelrin on 3/15/14.

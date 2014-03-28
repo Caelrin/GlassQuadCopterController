@@ -1,4 +1,4 @@
-package caelrin.GlassGesturesInMotion;
+package caelrin.GlassCopter;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -8,7 +8,7 @@ import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
-import caelrin.GlassGesturesInMotion.sensor.SensorListener;
+import caelrin.GlassCopter.sensor.SensorListener;
 import com.google.android.glass.timeline.LiveCard;
 import com.google.android.glass.timeline.TimelineManager;
 

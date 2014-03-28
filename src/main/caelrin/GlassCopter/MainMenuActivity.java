@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package caelrin.GlassGesturesInMotion;
+package caelrin.GlassCopter;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -23,14 +23,10 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.speech.RecognizerIntent;
-import android.util.Log;
 import android.view.*;
-import android.widget.TextView;
+import caelrin.GlassCopter.copter.CopterController;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
-
-import java.util.List;
 
 /**
  * Activity showing the options menu.
@@ -38,6 +34,8 @@ import java.util.List;
 public class MainMenuActivity extends Activity {
     private GestureDetector mGestureDetector;
     private GesturesInMotionService.GesturesBinder gesturesBinder;
+    private CopterController copterController;
+
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -58,21 +56,23 @@ public class MainMenuActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mGestureDetector = createGestureDetector(this);
+        copterController = new CopterController();
+        copterController.start();
         bindService(new Intent(this, GesturesInMotionService.class), mConnection, 0);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        openOptionsMenu();
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater inflater = getMenuInflater();
-//        inflater.inflate(R.menu.hello_menu, menu);
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.hello_menu, menu);
+        return true;
+    }
+
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
         if (mGestureDetector != null) {
@@ -89,7 +89,8 @@ public class MainMenuActivity extends Activity {
             @Override
             public boolean onGesture(Gesture gesture) {
                 if(gesture == Gesture.THREE_LONG_PRESS) {
-                    stop();
+                    openOptionsMenu();
+                    return false;
                 }
                 gesturesBinder.setDisplayText(gesture.name());
                 return true;
@@ -122,13 +123,15 @@ public class MainMenuActivity extends Activity {
     }
 
     private void stop() {
+        unbindService(mConnection);
         stopService(new Intent(this, GesturesInMotionService.class));
+
     }
 
     @Override
     public void onOptionsMenuClosed(Menu menu) {
         super.onOptionsMenuClosed(menu);
-        unbindService(mConnection);
-        finish();
+//        unbindService(mConnection);
+//        finish();
     }
 }

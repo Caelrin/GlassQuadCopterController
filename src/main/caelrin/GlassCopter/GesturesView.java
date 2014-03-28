@@ -1,4 +1,4 @@
-package caelrin.GlassGesturesInMotion;
+package caelrin.GlassCopter;
 
 import android.content.Context;
 import android.os.Handler;
@@ -7,9 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import caelrin.GlassGesturesInMotion.sensor.Orientation;
-import caelrin.GlassGesturesInMotion.sensor.OrientationListener;
-import caelrin.GlassGesturesInMotion.sensor.SensorListener;
+import caelrin.GlassCopter.copter.CopterController;
+import caelrin.GlassCopter.sensor.Orientation;
+import caelrin.GlassCopter.sensor.OrientationListener;
+import caelrin.GlassCopter.sensor.SensorListener;
 
 /**
  * Created by Caelrin on 1/26/14.

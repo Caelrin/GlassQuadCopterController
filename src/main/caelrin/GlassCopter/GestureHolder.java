@@ -1,11 +1,11 @@
-package caelrin.GlassGesturesInMotion;
+package caelrin.GlassCopter;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
-import caelrin.GlassGesturesInMotion.sensor.SensorListener;
+import caelrin.GlassCopter.sensor.SensorListener;
 
 /**
  * Created by Caelrin on 1/25/14.

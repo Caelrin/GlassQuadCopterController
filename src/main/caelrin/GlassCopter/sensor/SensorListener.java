@@ -1,4 +1,4 @@
-package caelrin.GlassGesturesInMotion.sensor;
+package caelrin.GlassCopter.sensor;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
