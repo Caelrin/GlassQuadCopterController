@@ -13,15 +13,12 @@ import caelrin.GlassCopter.sensor.SensorListener;
 public class GestureHolder implements SurfaceHolder.Callback {
 
     private static final String TAG = "Gesture Holder";
-    private final GesturesView gesturesView;
-    private final SensorListener sensorListener;
+    private final StartupView gesturesView;
     private SurfaceHolder mHolder;
 
     public GestureHolder(Context context, SensorListener sensorListener) {
-        this.sensorListener = sensorListener;
-        Log.e(TAG, "Construct mebbe? Take 3");
-        gesturesView = new GesturesView(context, sensorListener);
-        gesturesView.setListener(new GesturesView.GesturesListener() {
+        gesturesView = new StartupView(context);
+        gesturesView.setListener(new StartupView.GesturesListener() {
 
             @Override
             public void onTick(long millisUntilFinish) {
@@ -35,21 +32,14 @@ public class GestureHolder implements SurfaceHolder.Callback {
 
     }
 
-    public void setDisplayText(String text) {
-        gesturesView.setDisplayText(text);
-    }
-
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Log.e(TAG, "Surface created");
         mHolder = holder;
         gesturesView.start();
-        sensorListener.start();
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.e("Huh?", "Surf changed?");
         int measuredWidth = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
         int measuredHeight = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
 

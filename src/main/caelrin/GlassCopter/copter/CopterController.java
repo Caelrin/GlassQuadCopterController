@@ -18,7 +18,7 @@ public class CopterController {
     private static final long CONNECTION_TIMEOUT = 10000;
 
     public CopterController() {
-        drone = new ARDrone();
+        drone = new ARDrone("192.168.1.1", null);
     }
 
     public void start() {
@@ -33,10 +33,7 @@ public class CopterController {
 
         @Override
         protected String doInBackground(String... params) {
-//            try {
-//            } catch (IOException e) {
-//                Log.e(TAG, "Failed to land", e);
-//            }
+            drone.getCommandManager().landing();
             return null;
         }
     }
@@ -48,8 +45,6 @@ public class CopterController {
             drone.start();
             drone.getCommandManager().setLedsAnimation(LEDAnimation.BLINK_ORANGE, 3, 10);
             drone.getCommandManager().takeOff();
-            drone.getCommandManager().waitFor(5000);
-            drone.getCommandManager().landing();
             return null;
         }
     }

@@ -23,8 +23,10 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.*;
 import caelrin.GlassCopter.copter.CopterController;
+import caelrin.GlassCopter.sensor.SensorListener;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 
@@ -33,16 +35,16 @@ import com.google.android.glass.touchpad.GestureDetector;
  */
 public class MainMenuActivity extends Activity {
     private GestureDetector mGestureDetector;
-    private GesturesInMotionService.GesturesBinder gesturesBinder;
     private CopterController copterController;
+    private GesturesView view ;
+    private boolean isBound = false;
 
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             if (service instanceof GesturesInMotionService.GesturesBinder) {
-                gesturesBinder = (GesturesInMotionService.GesturesBinder) service;
-                openOptionsMenu();
+//                gesturesBinder = (GesturesInMotionService.GesturesBinder) service;
             }
         }
 
@@ -57,8 +59,13 @@ public class MainMenuActivity extends Activity {
         super.onCreate(savedInstanceState);
         mGestureDetector = createGestureDetector(this);
         copterController = new CopterController();
-        copterController.start();
-        bindService(new Intent(this, GesturesInMotionService.class), mConnection, 0);
+        if(!isBound) {
+            view = new GesturesView(getBaseContext());
+            setContentView(view);
+            copterController.start();
+//            bindService(new Intent(this, GesturesInMotionService.class), mConnection, 0);
+            isBound = true;
+        }
     }
 
     @Override
@@ -91,8 +98,10 @@ public class MainMenuActivity extends Activity {
                 if(gesture == Gesture.THREE_LONG_PRESS) {
                     openOptionsMenu();
                     return false;
+                } else if(gesture == Gesture.TWO_LONG_PRESS){
+                    copterController.land();
                 }
-                gesturesBinder.setDisplayText(gesture.name());
+//                gesturesBinder.setDisplayText(gesture.name());
                 return true;
             }
         });
@@ -123,15 +132,17 @@ public class MainMenuActivity extends Activity {
     }
 
     private void stop() {
-        unbindService(mConnection);
-        stopService(new Intent(this, GesturesInMotionService.class));
+        if(isBound) {
+            Log.e("STOP", "Stopping");
+            unbindService(mConnection);
+            stopService(new Intent(this, GesturesInMotionService.class));
+            isBound = false;
+        }
 
     }
 
     @Override
     public void onOptionsMenuClosed(Menu menu) {
         super.onOptionsMenuClosed(menu);
-//        unbindService(mConnection);
-//        finish();
     }
 }

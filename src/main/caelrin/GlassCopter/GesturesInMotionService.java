@@ -76,7 +76,7 @@ public class GesturesInMotionService extends Service {
 
     public class GesturesBinder extends Binder {
         public void setDisplayText(String text){
-            mCallback.setDisplayText(text);
+//            mCallback.setDisplayText(text);
         }
     }
 }

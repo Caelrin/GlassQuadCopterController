@@ -20,12 +20,28 @@
     android:layout_height="match_parent"
     android:background="@color/black" >
     <TextView
-            android:id="@+id/text_view"
+            android:id="@+id/instructions"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginTop="-90px"
             android:textSize="30px"
-            android:text="Tap to begin!"
+            android:text="Hold Three Fingers on touchpad to Exit"
+            android:gravity="center" />
+    <TextView
+        android:id="@+id/keypress"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginTop="-40px"
+        android:textSize="30px"
+        android:gravity="center" />
+    <TextView
+            android:id="@+id/orientation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="100px"
+            android:textSize="30px"
             android:gravity="center" />
 </FrameLayout>
