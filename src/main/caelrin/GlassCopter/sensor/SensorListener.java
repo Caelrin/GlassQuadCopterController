@@ -57,6 +57,13 @@ public class SensorListener {
             
         }
     }
+    public void stop() {
+        if (alreadyInitialized) {
+            sensorManager.unregisterListener(mSensorListener);
+            alreadyInitialized = false;
+        }
+    }
+
 
     public void addListener(OrientationListener listener) {
         listeners.add(listener);

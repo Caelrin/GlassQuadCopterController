@@ -29,6 +29,31 @@ public class CopterController {
         new LandCommand().execute();
     }
 
+    public void turnLeft() {
+        drone.getCommandManager().spinLeft(5);
+    }
+
+    public void turnRight() {
+        drone.getCommandManager().spinRight(5);
+    }
+
+    public void goForward(Integer speed) {
+        drone.getCommandManager().forward(speed);
+    }
+    public void goBackward(Integer speed) {
+        drone.getCommandManager().backward(speed);
+    }
+    public void goLeft(Integer speed) {
+        drone.getCommandManager().goLeft(speed);
+    }
+    public void goRight(Integer speed) {
+        drone.getCommandManager().goRight(speed);
+    }
+
+    public void hover() {
+        drone.getCommandManager().hover();
+    }
+
     private class LandCommand extends AsyncTask<String, Void, String> {
 
         @Override
@@ -43,8 +68,12 @@ public class CopterController {
         @Override
         protected String doInBackground(String... params) {
             drone.start();
-            drone.getCommandManager().setLedsAnimation(LEDAnimation.BLINK_ORANGE, 3, 10);
+            drone.getCommandManager().setLedsAnimation(LEDAnimation.BLINK_ORANGE, 3, 3);
             drone.getCommandManager().takeOff();
+            drone.getCommandManager().waitFor(1000);
+            drone.getCommandManager().flatTrim();
+            drone.getCommandManager().hover();
+
             return null;
         }
     }

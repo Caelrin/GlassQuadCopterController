@@ -16,10 +16,9 @@ public class GestureHolder implements SurfaceHolder.Callback {
     private final StartupView gesturesView;
     private SurfaceHolder mHolder;
 
-    public GestureHolder(Context context, SensorListener sensorListener) {
+    public GestureHolder(Context context) {
         gesturesView = new StartupView(context);
         gesturesView.setListener(new StartupView.GesturesListener() {
-
             @Override
             public void onTick(long millisUntilFinish) {
                 draw(gesturesView);

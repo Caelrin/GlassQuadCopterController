@@ -37,6 +37,7 @@ public class GesturesView extends FrameLayout {
         @Override
         public void orientationChanged(Orientation newOrientation) {
             lastUpdatedOrientation = newOrientation;
+            orientationView.setText(lastUpdatedOrientation.toString());
         }
     };
 
@@ -64,5 +65,9 @@ public class GesturesView extends FrameLayout {
             mStarted = true;
             mHandler.postDelayed(mUpdateViewRunnable, DELAY_MILLIS);
         }
+    }
+
+    public OrientationListener getOrientationListener() {
+        return orientationListener;
     }
 }

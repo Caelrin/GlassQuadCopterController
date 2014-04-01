@@ -25,17 +25,13 @@ public class GesturesInMotionService extends Service {
     private TimelineManager mTimelineManager;
     private LiveCard mLiveCard;
     private GestureHolder mCallback;
-    private SensorListener sensorListener;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
         mTimelineManager = TimelineManager.from(this);
 
-        SensorManager sensorManager =
-                (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-        sensorListener = new SensorListener(sensorManager);
     }
 
     @Override
@@ -49,7 +45,7 @@ public class GesturesInMotionService extends Service {
             Log.e(TAG, ">>>>>>>>>>>>>>>>>>>>>>>>> Starting UP!");
             mLiveCard = mTimelineManager.createLiveCard(LIVE_CARD_TAG);
 
-            mCallback = new GestureHolder(this, sensorListener);
+            mCallback = new GestureHolder(this);
             mLiveCard.setDirectRenderingEnabled(true).getSurfaceHolder().addCallback(mCallback);
 
 

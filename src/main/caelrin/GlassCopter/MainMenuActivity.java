@@ -21,12 +21,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.*;
 import caelrin.GlassCopter.copter.CopterController;
-import caelrin.GlassCopter.sensor.SensorListener;
+import caelrin.GlassCopter.sensor.*;
+import caelrin.GlassCopter.sensor.OrientationListener;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 
@@ -38,7 +40,8 @@ public class MainMenuActivity extends Activity {
     private CopterController copterController;
     private GesturesView view ;
     private boolean isBound = false;
-
+    private SensorListener sensorListener;
+    private Orientation baseOrientation;
 
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
@@ -54,19 +57,63 @@ public class MainMenuActivity extends Activity {
         }
     };
 
+    private OrientationListener orientationListener = new OrientationListener() {
+        @Override
+        public void orientationChanged(Orientation newOrientation) {
+            if(baseOrientation == null) {
+                baseOrientation = newOrientation;
+            }
+            if(newOrientation.pitch.x - baseOrientation.pitch.x > .02f) {
+                copterController.turnLeft();
+                Log.e("Activity", "Turn left a bit");
+            }
+            if(newOrientation.pitch.x - baseOrientation.pitch.x < -.02f) {
+                copterController.turnRight();
+                Log.e("Activity", "Turn right a bit");
+            }
+            Vector3 roll = newOrientation.roll;
+            if(roll.x > .05) {
+                copterController.goLeft(calculateMoveSpeed(roll.x));
+            } else if(roll.x < -.05){
+                copterController.goRight(calculateMoveSpeed(roll.x));
+            }
+            if(roll.y > .05) {
+                copterController.goBackward(calculateMoveSpeed(roll.x));
+            } else if(roll.y < -.05){
+                copterController.goForward(calculateMoveSpeed(roll.x));
+            }
+            if(roll.x < .05 && roll.x > -.05 && roll.y < .05 && roll.y > -.05){
+                copterController.hover();
+            }
+            baseOrientation = newOrientation;
+        }
+
+        private Integer calculateMoveSpeed(float f) {
+            return Math.abs((int) (f * 50f));
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mGestureDetector = createGestureDetector(this);
         copterController = new CopterController();
         if(!isBound) {
+            SensorManager sensorManager =
+                    (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+            sensorListener = new SensorListener(sensorManager);
+            sensorListener.addListener(orientationListener);
             view = new GesturesView(getBaseContext());
+            sensorListener.addListener(view.getOrientationListener());
+            sensorListener.start();
             setContentView(view);
             copterController.start();
-//            bindService(new Intent(this, GesturesInMotionService.class), mConnection, 0);
             isBound = true;
         }
     }
+
+
 
     @Override
     public void onResume() {
@@ -134,8 +181,8 @@ public class MainMenuActivity extends Activity {
     private void stop() {
         if(isBound) {
             Log.e("STOP", "Stopping");
-            unbindService(mConnection);
             stopService(new Intent(this, GesturesInMotionService.class));
+            sensorListener.stop();
             isBound = false;
         }
 
