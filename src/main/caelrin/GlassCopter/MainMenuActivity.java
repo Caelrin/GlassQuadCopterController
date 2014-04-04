@@ -36,6 +36,8 @@ import com.google.android.glass.touchpad.GestureDetector;
  * Activity showing the options menu.
  */
 public class MainMenuActivity extends Activity {
+    public static final double THRESHOLD = .10;
+    public static final double NEGATIVE_THRESHOLD = -1.0f * THRESHOLD;
     private GestureDetector mGestureDetector;
     private CopterController copterController;
     private GesturesView view ;
@@ -72,24 +74,24 @@ public class MainMenuActivity extends Activity {
                 Log.e("Activity", "Turn right a bit");
             }
             Vector3 roll = newOrientation.roll;
-            if(roll.x > .05) {
+            if(roll.x > THRESHOLD) {
                 copterController.goLeft(calculateMoveSpeed(roll.x));
-            } else if(roll.x < -.05){
+            } else if(roll.x < NEGATIVE_THRESHOLD){
                 copterController.goRight(calculateMoveSpeed(roll.x));
             }
-            if(roll.y > .05) {
-                copterController.goBackward(calculateMoveSpeed(roll.x));
-            } else if(roll.y < -.05){
-                copterController.goForward(calculateMoveSpeed(roll.x));
+            if(roll.y > THRESHOLD) {
+                copterController.goBackward(calculateMoveSpeed(roll.y));
+            } else if(roll.y < NEGATIVE_THRESHOLD){
+                copterController.goForward(calculateMoveSpeed(roll.y));
             }
-            if(roll.x < .05 && roll.x > -.05 && roll.y < .05 && roll.y > -.05){
+            if(roll.x < THRESHOLD && roll.x > NEGATIVE_THRESHOLD && roll.y < THRESHOLD && roll.y > NEGATIVE_THRESHOLD){
                 copterController.hover();
             }
             baseOrientation = newOrientation;
         }
 
         private Integer calculateMoveSpeed(float f) {
-            return Math.abs((int) (f * 50f));
+            return Math.abs((int) (f * 30f));
         }
     };
 
@@ -147,8 +149,11 @@ public class MainMenuActivity extends Activity {
                     return false;
                 } else if(gesture == Gesture.TWO_LONG_PRESS){
                     copterController.land();
+                } else if(gesture == Gesture.SWIPE_RIGHT) {
+                    copterController.ascend();
+                } else if(gesture == Gesture.SWIPE_LEFT) {
+                    copterController.descend();
                 }
-//                gesturesBinder.setDisplayText(gesture.name());
                 return true;
             }
         });

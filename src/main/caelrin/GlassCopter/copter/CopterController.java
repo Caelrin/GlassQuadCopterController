@@ -14,6 +14,7 @@ import java.net.UnknownHostException;
  */
 public class CopterController {
     IARDrone drone = null;
+    private boolean inTheAir;
     private String TAG = "Copter Controller";
     private static final long CONNECTION_TIMEOUT = 10000;
 
@@ -26,7 +27,23 @@ public class CopterController {
     }
 
     public void land() {
-        new LandCommand().execute();
+        if(inTheAir) {
+            new LandCommand().execute();
+        } else {
+            new StartCommand().execute();
+        }
+    }
+
+    public void ascend() {
+        drone.getCommandManager().up(20);
+        drone.getCommandManager().waitFor(1000);
+        drone.getCommandManager().hover();
+    }
+
+    public void descend() {
+        drone.getCommandManager().down(20);
+        drone.getCommandManager().waitFor(1000);
+        drone.getCommandManager().hover();
     }
 
     public void turnLeft() {
@@ -59,6 +76,7 @@ public class CopterController {
         @Override
         protected String doInBackground(String... params) {
             drone.getCommandManager().landing();
+            inTheAir = false;
             return null;
         }
     }
@@ -73,6 +91,7 @@ public class CopterController {
             drone.getCommandManager().waitFor(1000);
             drone.getCommandManager().flatTrim();
             drone.getCommandManager().hover();
+            inTheAir = true;
 
             return null;
         }
